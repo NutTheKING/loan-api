@@ -1,0 +1,67 @@
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    .animate-fade-in { animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .glass-panel { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    .ent-table th { background-color: #f8f9fa; color: #64748b; font-weight: 600; font-size: 0.75rem; text-transform: uppercase; padding: 12px 16px; border-bottom: 1px solid #e2e8f0; }
+    .ent-table td { padding: 12px 16px; font-size: 0.8rem; border-bottom: 1px solid #f1f5f9; color: #334155; }
+    .ent-table tr:hover td { background-color: #f8fafc; }
+    .animate-slide-in-right { animation: slideInRight 0.3s ease-out forwards; }
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
+    
+    .admin-login-bg {
+      background-color: #3b82f6;
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      background-size: cover;
+    }
+    .wave-pattern {
+      background-image: radial-gradient(#ffffff 1px, transparent 1px);
+      background-size: 20px 20px;
+      opacity: 0.1;
+    }
+    .client-purple-header {
+       background-color: #544B97;
+    }
+    /* Specific styles for the Admin73 Table */
+    .admin-detail-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+    .admin-detail-table td {
+        border: 1px solid #e2e8f0;
+        padding: 10px 12px;
+    }
+    .admin-label-col {
+        background-color: #f8f9fa;
+        color: #64748b;
+        font-weight: 600;
+        width: 200px;
+    }
+    .admin-value-col {
+        background-color: #ffffff;
+        color: #334155;
+    }
+    .admin-action-col {
+        background-color: #ffffff;
+        width: 250px;
+    }
+    .admin-link {
+        color: #1e88e5;
+        cursor: pointer;
+        text-decoration: none;
+        margin-right: 12px;
+        font-weight: 500;
+    }
+    .admin-link:hover {
+        text-decoration: underline;
+    }
+  @import "tailwindcss";
+
