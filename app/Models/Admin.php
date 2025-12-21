@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -18,7 +19,7 @@ class Admin extends Authenticatable
         'email',
         'password',
         'profile',
-        'role',
+        'role_id',
         'phone',
         'is_active',
         
@@ -29,7 +30,7 @@ class Admin extends Authenticatable
         'remember_token',
     ];
 
-    protected $casts = [
+protected $casts = [
         'is_active' => 'boolean',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
@@ -46,51 +47,53 @@ class Admin extends Authenticatable
     {
         return $this->hasMany(Loan::class, 'approved_by')->where('status', 'disbursed');
     }
-
-    // Accessors
-    public function getPermissionsArrayAttribute()
-    {
-        return $this->permissions ?? [];
+   
+    public function role(){
+        return $this->belongsTo(Role::class, 'role_id');
     }
 
+ public function roleModules(): HasManyThrough
+{  
+    return $this->hasManyThrough(
+        RoleModule::class,      // Final: Pivot records
+        Role::class,            // Intermediate: Role
+        'id',                   // role.id
+        'role_id',              // role_modules.role_id  
+        'role_id',              // admins.role_id
+        'id'                    // role.id
+    );
+}
+  // Scopes
+    public function scopeClients($query)
+    {
+        return $query->where('user_type', '');
+    }
+    
+    public function scopeAdmins($query)
+    {
+        return $query->where('user_type', 'admin');
+    }
     // Methods
-    public function isSuperAdmin()
+    public function isRoleSuperAdmin()
     {
-        return $this->role === 'super_admin';
+        return in_array('super_admin', $this->role);
+    }
+    public function isRoleAdmin()
+    {
+        return in_array('admin', $this->role);
+    }
+    public function isRoleLoanOperator()
+    {
+        return in_array('loan_opperator', $this->role);
     }
 
-    public function isAdmin()
+    public function isOperationsAdmin()
     {
-        return $this->role === 'admin';
+        return $this->admin_type  === 'operations';
     }
-
-    public function isLoanOfficer()
-    {
-        return $this->role === 'loan_officer';
-    }
-
-    public function hasPermission($permission)
-    {
-        if ($this->isSuperAdmin()) {
-            return true;
+    public function isSystemAdmin()
+        {
+            return $this->admin_type === 'system_admin';
         }
-
-        $permissions = $this->permissions_array;
-        return in_array($permission, $permissions);
-    }
-
-    public function canManageLoans()
-    {
-        return $this->hasPermission('manage_loans') || $this->isSuperAdmin();
-    }
-
-    public function canManageUsers()
-    {
-        return $this->hasPermission('manage_users') || $this->isSuperAdmin();
-    }
-
-    public function canApproveLoans()
-    {
-        return $this->hasPermission('approve_loans') || $this->isSuperAdmin() || $this->isAdmin();
-    }
+        
 }

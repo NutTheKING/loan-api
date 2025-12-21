@@ -11,15 +11,16 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('user_name')->unique();
+            $table->enum('admin_type', ['admin_system', 'operations'])->default('operations');
             $table->string('email')->unique()->nullable();
             $table->string('password');
             $table->string('profile')->nullable();
-            $table->enum('role', ['super_admin', 'admin', 'loan_opperator'])->default('admin');
+            $table->foreignId('role_id')->constrained('roles')->onDelete('set null');
             $table->string('phone')->nullable();
             $table->boolean('is_active')->default(true);
             $table->rememberToken();
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes();  
         });
     }
 

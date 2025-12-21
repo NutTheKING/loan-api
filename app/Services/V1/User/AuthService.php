@@ -49,12 +49,17 @@ class AuthService
             ]);
         }
 
+        // If user acc is Blacklist 
         if ($user->account_status !== 'normal') {
             throw ValidationException::withMessages([
                 'email' => ['Your account is ' . $user->status . '. Please contact support.'],
             ]);
         }
-
+        // If user has device token for notification
+        if($credentials['device_token']){
+            $user->update('device_token', $credentials['device_token']);
+        }
+        
         // Revoke old tokens
         $user->tokens()->delete();
 

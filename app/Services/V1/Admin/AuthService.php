@@ -2,6 +2,7 @@
 // app/Services/V1/Admin/AuthService.php
 namespace App\Services\V1\Admin;
 
+use App\Models\Module;
 use App\Repositories\Contracts\AdminRepositoryInterface;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -41,8 +42,9 @@ class AuthService
 
     public function login(array $data): array
     {
-        $admin = $this->adminRepository->findByUserName($data['user_name']);
-
+        $admin = $this->adminRepository->findByUserName($data['user_name']); 
+        // $modules = ; 
+       
         if (!$admin || !Hash::check($data['password'], $admin->password)) {
             throw ValidationException::withMessages([
                 'user_name' => ['The provided credentials are incorrect.'],
@@ -59,11 +61,14 @@ class AuthService
         $admin->tokens()->delete();
 
         // Generate new token
-        $token = $admin->createToken('admin-dashboard-' . Str::random(10))->plainTextToken;
+        $token = $admin->createToken('admin-dashboard' . Str::random(10))->plainTextToken;
 
         return [
-            'admin' => $admin,
-            'token' => $token,
+                'admin' => $admin,
+                'admin_type' => $admin->admin_type,
+                'modules_base_role' =>  $admin->role->modules,
+                'token' => $token,
+                'token_type' => 'Bearer'
         ];
     }
 

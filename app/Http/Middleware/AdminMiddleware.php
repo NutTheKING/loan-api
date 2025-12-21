@@ -4,12 +4,13 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AdminMiddleware
 {
     public function handle(Request $request, Closure $next)
-    {
-        dd($request->user()->tokenCan('admin') );
+    { 
+        Log::info($request->user());
         if (!$request->user() || $request->user()->tokenCan('admin') === false) {
             return response()->json([
                 'success' => false,
@@ -21,4 +22,5 @@ class AdminMiddleware
 
         return $next($request);
     }
+       
 }

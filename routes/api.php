@@ -78,8 +78,8 @@ Route::prefix('v1')->group(function () {
         // Authentication
         Route::post('/login', [AdminAuthController::class, 'login']);
         
-        // Protected Routes
-        Route::middleware(['auth:admin'])->group(function () {
+        // Protected Routes  for Operations
+        Route::middleware(['auth:admin', 'admin.type:admin'])->group(function () {
             // Auth  
             Route::post('/register', [AdminAuthController::class, 'register']);
             Route::post('/logout', [AdminAuthController::class, 'logout']);
@@ -87,7 +87,7 @@ Route::prefix('v1')->group(function () {
             Route::get('/profile', [AdminAuthController::class, 'profile']);
             Route::put('/profile', [AdminAuthController::class, 'update']);
             Route::post('/change-password', [AdminAuthController::class, 'changePassword']);
-            
+
             // Dashboard
             Route::prefix('dashboard')->group(function () {
                 Route::get('/', [AdminDashboardController::class, 'index']);
@@ -115,7 +115,59 @@ Route::prefix('v1')->group(function () {
             
             // Loans Management
             Route::prefix('loans')->group(function () {
-                Route::get('/', [AdminLoanController::class, 'inde   x']);
+                Route::get('/', [AdminLoanController::class, 'index']);
+                Route::get('/filter', [AdminLoanController::class, 'filter']);
+                Route::get('/overdue', [AdminLoanController::class, 'overdue']);
+                Route::get('/active', [AdminLoanController::class, 'active']);
+                Route::get('/statistics', [AdminLoanController::class, 'statistics']);
+                Route::get('/{id}', [AdminLoanController::class, 'show']);
+                Route::put('/{id}', [AdminLoanController::class, 'update']);
+                Route::delete('/{id}', [AdminLoanController::class, 'destroy']);
+                Route::post('/{id}/approve', [AdminLoanController::class, 'approve']);
+                Route::post('/{id}/reject', [AdminLoanController::class, 'reject']);
+                Route::post('/{id}/disburse', [AdminLoanController::class, 'disburse']);
+                Route::post('/{id}/mark-defaulted', [AdminLoanController::class, 'markDefaulted']);
+                Route::post('/{id}/add-late-fees', [AdminLoanController::class, 'addLateFees']);
+            });
+        });
+        // Protected Routes
+        Route::middleware(['auth:admin'])->group(function () {
+            // Auth  
+            Route::post('/register', [AdminAuthController::class, 'register']);
+            Route::post('/logout', [AdminAuthController::class, 'logout']);
+            Route::post('/refresh', [AdminAuthController::class, 'refresh']);
+            Route::get('/profile', [AdminAuthController::class, 'profile']);
+            Route::put('/profile', [AdminAuthController::class, 'update']);
+            Route::post('/change-password', [AdminAuthController::class, 'changePassword']);
+
+            // Dashboard
+            Route::prefix('dashboard')->group(function () {
+                Route::get('/', [AdminDashboardController::class, 'index']);
+                Route::get('/statistics', [AdminDashboardController::class, 'statistics']);
+                Route::get('/loan-analytics', [AdminDashboardController::class, 'loanAnalytics']);
+                Route::get('/revenue-analytics', [AdminDashboardController::class, 'revenueAnalytics']);
+                Route::get('/user-analytics', [AdminDashboardController::class, 'userAnalytics']);
+                Route::get('/performance-metrics', [AdminDashboardController::class, 'performanceMetrics']);
+                Route::get('/risk-analysis', [AdminDashboardController::class, 'riskAnalysis']);
+                Route::get('/monthly-report', [AdminDashboardController::class, 'monthlyReport']);
+                Route::get('/recent-activities', [AdminDashboardController::class, 'recentActivities']);
+            });
+            
+            // Users Management
+            Route::prefix('users')->group(function () {
+                Route::get('/', [AdminUserController::class, 'index']);
+                Route::get('/with-loans', [AdminUserController::class, 'withLoans']);
+                Route::get('/search', [AdminUserController::class, 'search']);
+                Route::get('/{id}', [AdminUserController::class, 'show']);
+                Route::put('/{id}', [AdminUserController::class, 'update']);
+                Route::delete('/{id}', [AdminUserController::class, 'destroy']);
+                Route::put('/{id}/status', [AdminUserController::class, 'updateStatus']);
+                Route::get('/{id}/statistics', [AdminUserController::class, 'statistics']);
+            });
+            
+            // Loans Management
+            Route::prefix('loans')->group(function () {
+                Route::get('/', [AdminLoanController::class, 'index']);
                 Route::get('/filter', [AdminLoanController::class, 'filter']);
                 Route::get('/overdue', [AdminLoanController::class, 'overdue']);
                 Route::get('/active', [AdminLoanController::class, 'active']);

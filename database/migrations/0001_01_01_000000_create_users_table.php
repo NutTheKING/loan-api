@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('profile')->nullable();                     
             $table->string('ip_address')->index()->nullable();
             $table->string('device')->index()->nullable();
+            $table->string('device_token')->index()->nullable();
             $table->integer('credit_score')->default(0)->index();
             $table->enum('account_status', allowed: ['normal', 'blacklist'])->default('normal');
             $table->timestamp('email_verified_at')->nullable();

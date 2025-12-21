@@ -4,52 +4,98 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Admin;
+use App\Models\Role;
+use App\Models\Module;
+use App\Models\RoleModule;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Create Super Admin
-        Admin::create([
+        // Step 1: Create Roles
+        $roles = [
+            [
+                'name' => 'Super Admin',
+                'key' => 'super_admin'
+            ],
+            [
+                'name' => 'Admin',
+                'key' => 'admin'
+            ],
+            [
+                'name' => 'Loan Opperator',
+                'key' => 'loan_opperator'
+            ]
+        ];
+
+        foreach ($roles as $roleData) {
+            Role::create($roleData);
+        }
+
+        $this->command->info('Roles created successfully!');
+
+        // Step 2: Create Modules
+        $modules = [
+            ['name' => 'Loan Management', 'key' => 'loan_management', 'order_sequent' => 1],
+            ['name' => 'All Members', 'key' => 'all_members', 'order_sequent' => 2],
+            ['name' => 'Risk Control', 'key' => 'risk_control', 'order_sequent' => 3],
+            ['name' => 'Financial Statistics', 'key' => 'financial_statistics', 'order_sequent' => 4],
+            ['name' => 'Dashboard', 'key' => 'dashboard', 'order_sequent' => 5],
+            ['name' => 'User Management', 'key' => 'user_management', 'order_sequent' => 6],
+            ['name' => 'Role & Permission', 'key' => 'role_permission', 'order_sequent' => 7],
+            ['name' => 'Loan Config', 'key' => 'loan_config', 'order_sequent' => 8],
+            ['name' => 'Reports', 'key' => 'reports', 'order_sequent' => 9],
+            ['name' => 'Audit Logs', 'key' => 'audit_logs', 'order_sequent' => 10],
+        ];
+
+        foreach ($modules as $moduleData) {
+            Module::create($moduleData);
+        }
+
+        $this->command->info('Modules created successfully!');
+
+        // Step 3: Assign all modules to Super Admin role
+        $superAdminRole = Role::where('key', 'super_admin')->first();
+        $allModules = Module::all();
+
+        foreach ($allModules as $module) {
+            RoleModule::create([
+                'role_id' => $superAdminRole->id,
+                'module_id' => $module->id
+            ]);
+        }
+
+        $this->command->info('All modules assigned to Super Admin role!');
+
+        // Step 4: Create Admin Users with role_id instead of role string
+        $superAdmin = Admin::create([
             'full_name' => 'Super Admin123',
             'user_name' => 'Super Admin',
             'email' => 'superadmin@loanapp.com',
             'password' => Hash::make('password123'),
-            'role' => 'super_admin',
+            'role_id' => Role::where('key', 'super_admin')->first()->id,
             'phone' => '08012345678',
-            // 'permissions' => json_encode(['*']),
             'is_active' => true,
         ]);
 
-        // Create Admin
-        Admin::create([
+        $admin = Admin::create([
             'full_name' => 'System Admin123',
             'user_name' => 'System Admin',
             'email' => 'admin@loanapp.com',
             'password' => Hash::make('password123'),
-            'role' => 'admins',
+            'role_id' => Role::where('key', 'admin')->first()->id,
             'phone' => '08087654321',
-            // 'permissions' => json_encode([
-            //     'manage_loans',
-            //     'manage_users',
-            //     'view_dashboard',
-            // ]),
             'is_active' => true,
         ]);
 
-        // Create Loan Officer
-        Admin::create([
-            'full_name' => 'Loan Officer123',
-            'user_name' => 'Loan Officer',
+        $loanOfficer = Admin::create([
+            'full_name' => 'Loan Operator123',
+            'user_name' => 'Loan Operator',
             'email' => 'officer@loanapp.com',
             'password' => Hash::make('password123'),
-            'role' => 'loan_officer',
+            'role_id' => Role::where('key', 'loan_opperator')->first()->id,
             'phone' => '08011223344',
-            // 'permissions' => json_encode([
-            //     'manage_loans',
-            //     'view_dashboard',
-            // ]),
             'is_active' => true,
         ]);
 

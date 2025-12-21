@@ -17,7 +17,7 @@ class RegisterRequest extends FormRequest
             'email' => 'sometimes|string|email|max:100|unique:users',
             'user_name' => 'required|string|max:100|unique:users',
             'password' => 'required|string|min:8',
-            'role' => 'required|string|in:super_admin,admin,loan_opperator',
+            'role_id' => 'required',
             'phone' => 'required|string|min:8|max:10',
         ];
     }
