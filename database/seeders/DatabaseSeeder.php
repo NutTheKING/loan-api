@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($roles as $roleData) {
-            Role::create($roleData);
+            Role::firstOrCreate(['key' => $roleData['key']], $roleData);
         }
 
         $this->command->info('Roles created successfully!');
@@ -50,7 +50,7 @@ class DatabaseSeeder extends Seeder
         ];
 
         foreach ($modules as $moduleData) {
-            Module::create($moduleData);
+            Module::firstOrCreate(['key' => $moduleData['key']], $moduleData);
         }
 
         $this->command->info('Modules created successfully!');
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
         $allModules = Module::all();
 
         foreach ($allModules as $module) {
-            RoleModule::create([
+            RoleModule::firstOrCreate([
                 'role_id' => $superAdminRole->id,
                 'module_id' => $module->id
             ]);
@@ -69,35 +69,41 @@ class DatabaseSeeder extends Seeder
         $this->command->info('All modules assigned to Super Admin role!');
 
         // Step 4: Create Admin Users with role_id instead of role string
-        $superAdmin = Admin::create([
-            'full_name' => 'Super Admin123',
-            'user_name' => 'Super Admin',
-            'email' => 'superadmin@loanapp.com',
-            'password' => Hash::make('password123'),
-            'role_id' => Role::where('key', 'super_admin')->first()->id,
-            'phone' => '08012345678',
-            'is_active' => true,
-        ]);
+        $superAdmin = Admin::firstOrCreate(
+            ['email' => 'superadmin@loanapp.com'],
+            [
+                'full_name' => 'Super Admin123',
+                'user_name' => 'Super Admin',
+                'password' => Hash::make('password123'),
+                'role_id' => Role::where('key', 'super_admin')->first()->id,
+                'phone' => '08012345678',
+                'is_active' => true,
+            ]
+        );
 
-        $admin = Admin::create([
-            'full_name' => 'System Admin123',
-            'user_name' => 'System Admin',
-            'email' => 'admin@loanapp.com',
-            'password' => Hash::make('password123'),
-            'role_id' => Role::where('key', 'admin')->first()->id,
-            'phone' => '08087654321',
-            'is_active' => true,
-        ]);
+        $admin = Admin::firstOrCreate(
+            ['email' => 'admin@loanapp.com'],
+            [
+                'full_name' => 'System Admin123',
+                'user_name' => 'System Admin',
+                'password' => Hash::make('password123'),
+                'role_id' => Role::where('key', 'admin')->first()->id,
+                'phone' => '08087654321',
+                'is_active' => true,
+            ]
+        );
 
-        $loanOfficer = Admin::create([
-            'full_name' => 'Loan Operator123',
-            'user_name' => 'Loan Operator',
-            'email' => 'officer@loanapp.com',
-            'password' => Hash::make('password123'),
-            'role_id' => Role::where('key', 'loan_opperator')->first()->id,
-            'phone' => '08011223344',
-            'is_active' => true,
-        ]);
+        $loanOfficer = Admin::firstOrCreate(
+            ['email' => 'officer@loanapp.com'],
+            [
+                'full_name' => 'Loan Operator123',
+                'user_name' => 'Loan Operator',
+                'password' => Hash::make('password123'),
+                'role_id' => Role::where('key', 'loan_opperator')->first()->id,
+                'phone' => '08011223344',
+                'is_active' => true,
+            ]
+        );
 
         $this->command->info('Default admin users created successfully!');
         $this->command->info('Super Admin: superadmin@loanapp.com / password123');

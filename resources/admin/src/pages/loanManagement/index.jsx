@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+// Firebase not required here; removed import to avoid bundling issues.
 import {FileText, Copy, Eye, ChevronDown as ChevronDownIcon
 } from 'lucide-react';
 // --- Utils ---

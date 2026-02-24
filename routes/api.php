@@ -9,6 +9,9 @@ use App\Http\Controllers\Api\V1\Admin\AuthController as AdminAuthController;
 use App\Http\Controllers\Api\V1\Admin\LoanController as AdminLoanController;
 use App\Http\Controllers\Api\V1\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\V1\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Api\V1\Admin\NotificationApiController as AdminNotificationApiController;
+use App\Http\Controllers\Api\V1\Admin\PermissionApiController as AdminPermissionApiController;
+use App\Http\Controllers\Api\V1\Admin\ConfigApiController as AdminConfigApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -75,6 +78,10 @@ Route::prefix('v1')->group(function () {
     
     // ========== ADMIN ROUTES ==========
     Route::prefix('admin')->group(function () {
+        // Development-only public dashboard endpoint (for local testing)
+        if (app()->environment('local') || config('app.debug')) {
+            Route::get('/dashboard-public', [AdminDashboardController::class, 'index']);
+        }
         // Authentication
         Route::post('/login', [AdminAuthController::class, 'login']);
         
@@ -152,6 +159,15 @@ Route::prefix('v1')->group(function () {
                 Route::get('/monthly-report', [AdminDashboardController::class, 'monthlyReport']);
                 Route::get('/recent-activities', [AdminDashboardController::class, 'recentActivities']);
             });
+
+            // Notifications
+            Route::get('/notifications', [AdminNotificationApiController::class, 'index']);
+
+            // Permissions
+            Route::get('/permissions', [AdminPermissionApiController::class, 'index']);
+
+            // Config
+            Route::get('/config', [AdminConfigApiController::class, 'index']);
             
             // Users Management
             Route::prefix('users')->group(function () {

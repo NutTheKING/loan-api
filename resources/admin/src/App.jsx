@@ -1,28 +1,26 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { initializeApp } from 'firebase/app';
-import { 
-  getAuth, 
-  signInWithCustomToken, 
-  signInAnonymously, 
-  onAuthStateChanged,
-  signOut
-} from 'firebase/auth';
-import { 
-  getFirestore, 
-  collection, 
-  addDoc, 
-  doc, 
-  updateDoc, 
-  onSnapshot, 
-  serverTimestamp, 
-  query, 
-  where,
-  increment,
-  deleteDoc,
-  setDoc,
-  getDoc,
-  orderBy
-} from 'firebase/firestore';
+import {
+   initializeApp,
+   getAuth,
+   signInWithCustomToken,
+   signInAnonymously,
+   onAuthStateChanged,
+   signOut,
+   getFirestore,
+   collection,
+   addDoc,
+   doc,
+   updateDoc,
+   onSnapshot,
+   serverTimestamp,
+   query,
+   where,
+   increment,
+   deleteDoc,
+   setDoc,
+   getDoc,
+   orderBy,
+} from './firebase-shim';
 import { 
   LayoutDashboard, PlusCircle, History, LogOut, ChevronRight, Calculator, Wallet, Landmark, CreditCard, Loader2, Menu, X, 
   Search, RefreshCcw, Download, Settings, FileText, CheckCircle, XCircle, AlertTriangle, User, LayoutGrid, ArrowRightLeft, 
@@ -35,15 +33,15 @@ import ClientDetailsModal from './components/modal/clientDetailModal';
 import DataTable from './components/share/DataTable';
 import LoanManagement from './pages/loanManagement';
 
-// --- YOUR FIREBASE CONFIGURATION ---
+// Firebase configuration — read from Vite env vars (resources/admin/.env)
 const firebaseConfig = {
-  apiKey: "AIzaSyCOlrqJW5YRjST1j3aFHooi3o518Xf-0C8",
-  authDomain: "loansystem273.firebaseapp.com",
-  projectId: "loansystem273",
-  storageBucket: "loansystem273.firebasestorage.app",
-  messagingSenderId: "626358177858",
-  appId: "1:626358177858:web:e7b3d840510b987157dddb",
-  measurementId: "G-0Y20BHT4CE"
+   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || 'YOUR_API_KEY',
+   authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || 'loan-app1123.firebaseapp.com',
+   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || 'loan-app1123',
+   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || 'loan-app1123.appspot.com',
+   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || '377342984195',
+   appId: import.meta.env.VITE_FIREBASE_APP_ID || 'YOUR_APP_ID',
+   measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID || 'G-525741884',
 };
 
 const app = initializeApp(firebaseConfig);

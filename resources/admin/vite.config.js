@@ -1,4 +1,5 @@
 import { defineConfig } from 'vite'
+import path from 'path'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -7,6 +8,14 @@ export default defineConfig({
   plugins: [react(),
      tailwindcss()
   ],
+  resolve: {
+    alias: {
+      // point the 'firebase' package to a local empty stub so Rollup/Vite
+      // won't try to resolve the node_modules 'firebase' package which
+      // may have problematic exports for this build environment.
+      'firebase': path.resolve(__dirname, 'src/firebase-empty.js')
+    }
+  },
   base: '/admin/',
    build: {
      outDir: '../../public/admin',
@@ -22,7 +31,5 @@ export default defineConfig({
       }
     }
   },
-   optimizeDeps: {
-    include: ["firebase/app"]
-  }
+   // avoid pre-bundling firebase packages which may cause resolution errors
 })

@@ -42,7 +42,14 @@ class AuthService
 
     public function login(array $data): array
     {
-        $admin = $this->adminRepository->findByUserName($data['user_name']); 
+        // Support login by user_name or email
+        $admin = null;
+        if (!empty($data['user_name'])) {
+            $admin = $this->adminRepository->findByUserName($data['user_name']);
+        }
+        if (!$admin && !empty($data['email'])) {
+            $admin = $this->adminRepository->findByEmail($data['email']);
+        }
         // $modules = ; 
        
         if (!$admin || !Hash::check($data['password'], $admin->password)) {
